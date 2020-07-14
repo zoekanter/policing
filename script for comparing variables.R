@@ -2,8 +2,12 @@
 library(dplyr)
 library(tidyr)
 
+#turn off scientific notation
+options(scipen=999)
+
 #set working directory
 setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing")
+source("functions file.R")
 
 #I want to call in my datasets (citations, use of force).
 UOF<-read.csv(file='use_of_force_Seattle.csv', stringsAsFactors = FALSE)
@@ -41,6 +45,7 @@ AllMetadata_UOF_FixRace[AllMetadata_UOF=="Hispanic or Latino"]<-"Hispanic"
 AllMetadata_UOF_FixSector<-AllMetadata_UOF_FixRace
 AllMetadata_UOF_FixSector<-as.data.frame(substr(AllMetadata_UOF_NA$sector, 0,1),stringsAsFactors = FALSE)
 colnames(AllMetadata_UOF_FixSector)<-c("sector")
+AllMetadata_UOF_FixSector[AllMetadata_UOF_FixSector==""]<-NA
 AllMetadata_UOF_Standardized<-cbind.data.frame(AllMetadata_UOF_FixRace$date,AllMetadata_UOF_FixRace$precinct,AllMetadata_UOF_FixSector$sector, AllMetadata_UOF_FixRace$gender, AllMetadata_UOF_FixRace$race)
 colnames(AllMetadata_UOF_Standardized)<-c("date","precinct", "sector", "gender","race")
 
@@ -88,6 +93,7 @@ AllMetadata_Citations_CleanPrecinct[AllMetadata_Citations_CleanPrecinct=="SouthW
 
 #Make dataset with just date, precinct, sector, gender, race
 Metadata_Citations_Standardized<-cbind.data.frame(AllMetadata_Citations_CleanPrecinct$date,AllMetadata_Citations_CleanPrecinct$precinct,AllMetadata_Citations_CleanPrecinct$sector,AllMetadata_Citations_CleanPrecinct$gender,AllMetadata_Citations_CleanPrecinct$race)
+colnames(Metadata_Citations_Standardized)<-(c("date","precinct","sector","gender","race"))
 
 #combine date, precinct, race, gender
 CreateUniqueIdentifierCode_Citations<-unite(Metadata_Citations_Standardized, dpsrg, sep=",")
@@ -104,108 +110,10 @@ unique(TestOverlapInUniqueID)
 
 #look at how many have only 1 case
 OneCaseOverlapUniqueID <-  TestOverlapInUniqueID %>% group_by(dpsrg) %>% filter(n()==1) #
-
-#Now I want to make a function that will spit out for each column: 1) how many NAs and 2) how many of those NAs are unique to the column (i.e. do not overlap with another column's NA)
-x<-Metadata_Citations_Standardized
-colnames(x)<-c("1","2","3","4","5")
-Vector_length<-as.data.frame(x)
-NA_Count<-data.frame(matrix(NA,nrow=nrow(Vector_length),ncol=ncol(Vector_length)))
-colnames(NA_Count)<-c("1","2","3","4","5")
-SummaryofNAsandNAOverlap<-data.frame(matrix(NA,nrow=ncol(Vector_length),ncol=5))
-colnames(SummaryofNAsandNAOverlap)<-c("NA","Unique_values","Only_NA_in_row", "One_of_Two_NAs", "Number_of_Cases")
-NumberofNAsPerRow<-as.data.frame(matrix(NA,nrow=nrow(Vector_length), ncol=1))
-PercentNAvsNonNA<-as.data.frame(matrix(NA,nrow=nrow(Vector_length),ncol=(ncol(Vector_length))))
+#There are not enough cases that overlap, so I need to look at the datasets and see what columns contribute most to our overlap ID
 
 
-#look for number of NAs in each column
-for (j in (1:ncol(x)))
-{
-  for (i in seq_along(x$`1`)){
-    
-    if(is.na(x[,j][i])){
-      NA_Count[,j][i]<-1
-    } 
-    else{
-      NA_Count[,j][i]<-0
-    }
-  }
-}
-SummaryofNAsandNAOverlap[,1]<-colSums(NA_Count)
-
-#look for numbers of distinct values in each column
-for (j in (1:ncol(x)))
-{
-  SummaryofNAsandNAOverlap[,2][j]<-length(unique(x[,j][!is.na(x[,j])]))
-}
-
-#look for numbers of cases where NA is unique in the column
-for (j in (1:ncol(x)))
-{
-  for (i in seq_along(x$`1`)){
-    
-    if(is.na(x[,j][i])==TRUE){
-      
-      PercentNAvsNonNA[,j][i]<-rowSums(is.na(x[i,]))
-    } 
-    else{
-      PercentNAvsNonNA[,j][i]<-0
-    }
-  }
-  SummaryofNAsandNAOverlap[,3][j]<-(sum(PercentNAvsNonNA[,j]==1))/sum(PercentNAvsNonNA[,j]>1)
-  SummaryofNAsandNAOverlap[,4][j]<-(sum(PercentNAvsNonNA[,j]==2))/(sum(PercentNAvsNonNA[,j]>2)+sum(PercentNAvsNonNA[,j]==1))
-  SummaryofNAsandNAOverlap[,5][j]<-cbind(length(seq_along(x$`1`)))
-}
-NASummary_Citations<-SummaryofNAsandNAOverlap
-
-#replicate with UOF
-x<-AllMetadata_UOF_Standardized
-colnames(x)<-c("1","2","3","4","5")
-Vector_length<-as.data.frame(x)
-NA_Count<-data.frame(matrix(NA,nrow=nrow(Vector_length),ncol=ncol(Vector_length)))
-colnames(NA_Count)<-c("1","2","3","4","5")
-SummaryofNAsandNAOverlap<-data.frame(matrix(NA,nrow=ncol(Vector_length),ncol=5))
-colnames(SummaryofNAsandNAOverlap)<-c("NA","Unique_values","Only_NA_in_row", "One_of_Two_NAs", "Number_of_Cases")
-NumberofNAsPerRow<-as.data.frame(matrix(NA,nrow=nrow(Vector_length), ncol=1))
-PercentNAvsNonNA<-as.data.frame(matrix(NA,nrow=nrow(Vector_length),ncol=(ncol(Vector_length))))
-
-
-#look for number of NAs in each column
-for (j in (1:ncol(x)))
-{
-  for (i in seq_along(x$`1`)){
-    
-    if(is.na(x[,j][i])){
-      NA_Count[,j][i]<-1
-    } 
-    else{
-      NA_Count[,j][i]<-0
-    }
-  }
-}
-SummaryofNAsandNAOverlap[,1]<-colSums(NA_Count)
-
-#look for numbers of distinct values in each column
-for (j in (1:ncol(x)))
-{
-  SummaryofNAsandNAOverlap[,2][j]<-length(unique(x[,j][!is.na(x[,j])]))
-}
-
-#look for numbers of cases where NA is unique in the column
-for (j in (1:ncol(x)))
-{
-  for (i in seq_along(x$`1`)){
-    
-    if(is.na(x[,j][i])==TRUE){
-      
-      PercentNAvsNonNA[,j][i]<-rowSums(is.na(x[i,]))
-    } 
-    else{
-      PercentNAvsNonNA[,j][i]<-0
-    }
-  }
-  SummaryofNAsandNAOverlap[,3][j]<-(sum(PercentNAvsNonNA[,j]==1))/sum(PercentNAvsNonNA[,j]>1)
-  SummaryofNAsandNAOverlap[,4][j]<-(sum(PercentNAvsNonNA[,j]==2))/(sum(PercentNAvsNonNA[,j]>2)+sum(PercentNAvsNonNA[,j]==1))
-  SummaryofNAsandNAOverlap[,5][j]<-cbind(length(seq_along(x$`1`)))
-}
-NASummary_UOF<-SummaryofNAsandNAOverlap
-
+#Now I want to use a function I made that will spit out for each column: 1) how many NAs and 2) how many of those NAs are unique to the column (i.e. do not overlap with another column's NA)
+UOF<-createNAChart(AllMetadata_UOF_Standardized)
+Citations<-createNAChart(Metadata_Citations_Standardized)
+                   
