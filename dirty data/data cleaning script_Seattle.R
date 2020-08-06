@@ -113,7 +113,13 @@ AllMetadata_shootings[AllMetadata_shootings=="Black"]<-"Black or African America
 AllMetadata_shootings[AllMetadata_shootings=="Black "]<-"Black or African American"
 AllMetadata_shootings[AllMetadata_shootings=="\nBlack"]<-"Black or African American"
 AllMetadata_shootings[AllMetadata_shootings=="Native American"]<-"American Indian or Alaska Native"
-
+AllMetadata_shootings[AllMetadata_shootings=="\nMale"]<-"Male"
+AllMetadata_shootings[AllMetadata_shootings=="\nYes"]<-"Yes"
+AllMetadata_shootings[AllMetadata_shootings=="\nNo"]<-"No"
+AllMetadata_shootings[AllMetadata_shootings=="On"]<-"No"
+AllMetadata_shootings[AllMetadata_shootings=="Within Policy "]<-"Justified"
+AllMetadata_shootings[AllMetadata_shootings=="Within Policy"]<-"Justified"
+AllMetadata_shootings[AllMetadata_shootings=="Out of Policy"]<-"Not Justified"
 
 #add a colon 2 spaces into time
 shooting_hour<-as.numeric(substr(AllMetadata_shootings$Time,1,nchar(AllMetadata_shootings$Time)-2))
@@ -124,6 +130,13 @@ shooting_time<-as.data.frame(cbind(shooting_hour,shooting_minute))
 shooting_time$shooting_hour<-str_pad(shooting_time$shooting_hour, 2, pad = "0")
 shooting_time$shooting_minute<-str_pad(shooting_time$shooting_minute, 2, pad = "0")
 shooting_time<-unite(shooting_time,time,sep=":")
+
+#now make all missings = NA
+AllMetadata_shootings[AllMetadata_shootings=="MISSING"]<-NA
+AllMetadata_shootings[AllMetadata_shootings==""]<-NA
+AllMetadata_shootings[AllMetadata_shootings=="\nUnknown"]<-NA
+AllMetadata_shootings[AllMetadata_shootings=="Missing"]<-NA
+
 
 #combine data into one dataset
 AllMetadata_shootings_clean<-cbind.data.frame(AllMetadata_shootings[,1:3],shooting_time,AllMetadata_shootings[,5:28])
