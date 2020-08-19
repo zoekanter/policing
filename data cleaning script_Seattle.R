@@ -2,27 +2,23 @@
 library(dplyr)
 library(tidyr)
 
-#turn off scientific notation
-options(scipen=999)
-
 #set working directory
-setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing")
-source("functions file.R")
+setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/dirty data")
 
 #I want to call in my datasets (citations, use of force).
 UOF<-read.csv(file='use_of_force_Seattle.csv', stringsAsFactors = FALSE)
 citations<-read.csv(file='citations_seattle.csv', stringsAsFactors = FALSE)
+shootings<-read.csv(file='Officer_involved_shooting_Seattle.csv', stringsAsFactors = FALSE)
 
 #numericize the data
 #first split year/date into two separate variables
-SplitDateTime_UOF<-strsplit(as.character(UOF$Incident.Date.Time),"\\s")
+SplitDateTime_UOF<-strsplit(as.character(UOF$Occured_date_time),"\\s")
 SplitDateTime_UOF<-do.call(rbind, SplitDateTime_UOF)
-colnames(SplitDateTime_UOF)<-(c("date","time","hour"))
+colnames(SplitDateTime_UOF)<-(c("date","time"))
 SplitDateTime_UOF<-as.data.frame(SplitDateTime_UOF, stringsAsFactors=FALSE)
-
 #making a table with all relevant metadata for UOF
-AllMetadata_UOF<-cbind.data.frame(SplitDateTime_UOF$date,SplitDateTime_UOF$time,UOF$hour,UOF$Officers.Race,UOF$Officers.Ethnicity,UOF$Officers.Sex,UOF$Offenders.Race,UOF$Offenders.Ethnicity,UOF$Offenders.Sex, stringsAsFactors=FALSE)
-colnames(AllMetadata_UOF)<-(c("date","time","hour","Officers.Race","Officers.Ethnicity","Officers.Sex","Offenders.Race","Offenders.Ethnicity","Offenders.Sex"))
+AllMetadata_UOF<-cbind.data.frame(SplitDateTime_UOF$date,SplitDateTime_UOF$time,UOF$Precinct,UOF$Sector,UOF$Beat,UOF$Subject_Gender,UOF$Subject_Race, stringsAsFactors=FALSE)
+colnames(AllMetadata_UOF)<-(c("date","time","precinct","sector","beat","gender","race"))
 
 #make all null values = NA for UOF
 AllMetadata_UOF_NA<-AllMetadata_UOF
