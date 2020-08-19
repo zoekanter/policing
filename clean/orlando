@@ -1,0 +1,33 @@
+#calling libraries
+library(dplyr)
+library(tidyr)
+
+#turn off scientific notation
+options(scipen=999)
+
+#set working directory
+setwd("~/Desktop/research/CSSC/policing")
+
+#call datasets Orlando (use of force, officer involved shooting)
+Shooting<-read.csv(file='OPD_officer-involved_shootings.csv', stringsAsFactors = FALSE)
+UOF<-read.csv(file='OPD_response_to_resistance', stringsAsFactors = FALSE)
+
+#first split year/date into two separate variables
+SplitDateTime_UOF<-strsplit(as.character(UOF$Occured_date_time),"\\s")
+SplitDateTime_UOF<-do.call(rbind, SplitDateTime_UOF)
+colnames(SplitDateTime_UOF)<-(c("date","time"))
+SplitDateTime_UOF<-as.data.frame(SplitDateTime_UOF, stringsAsFactors=FALSE)
+#making a table with all relevant metadata for UOF
+AllMetadata_UOF<-cbind.data.frame(SplitDateTime_UOF$date,SplitDateTime_UOF$time,UOF$Precinct,UOF$Sector,UOF$Beat,UOF$Subject_Gender,UOF$Subject_Race, stringsAsFactors=FALSE)
+colnames(AllMetadata_UOF)<-(c("date","time","precinct","sector","beat","gender","race"))
+
+#make all null values = NA for UOF
+AllMetadata_UOF_NA<-NA
+
+#Change race to be consisted with citations
+AllMetadata_UOF_FixRace<-AllMetadata_UOF_NA
+AllMetadata_UOF_FixRace[AllMetadata_UOF=="A"]<-("Asian")
+AllMetadata_UOF_FixRace[AllMetadata_UOF=="B"]<-("Black")
+AllMetadata_UOF_FixRace[AllMetadata_UOF=="W"]<-"White"
+
+
