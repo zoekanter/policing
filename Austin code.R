@@ -80,6 +80,7 @@ ALLMetadata_UOF_NA<-ALLMetadata_UOF_ALL
 ALLMetadata_UOF_NA[ALLMetadata_UOF_ALL=="u"]<-NA
 ALLMetadata_UOF_NA[ALLMetadata_UOF_ALL==""]<-NA
 ALLMetadata_UOF_NA[ALLMetadata_UOF_ALL=="-1"]<-NA
+ALLMetadata_UOF_NA[ALLMetadata_UOF_ALL=="88"]<-NA
 
 #changing race to be words instead of single letters & to match Citations
 AllMetadata_UOF_FixRace<-ALLMetadata_UOF_NA
@@ -91,6 +92,7 @@ AllMetadata_UOF_FixRace[ALLMetadata_UOF_ALL=="I"]<-("Native American")
 AllMetadata_UOF_FixRace[ALLMetadata_UOF_ALL=="M"]<-("Middle Eastern")
 AllMetadata_UOF_FixRace[ALLMetadata_UOF_ALL=="P"]<-("Hawaiian or Pacific Islander")
 
+
 #fixing column names to match for easy combining
 Citations18<-Citations18%>% rename(OFF.FROM.DATE = OffenseDate,
                                    CITATION.NUMBER = Citation.Number,
@@ -98,7 +100,6 @@ Citations18<-Citations18%>% rename(OFF.FROM.DATE = OffenseDate,
                                      RACE.ORIGIN.CODE = Race,
                                      CASE.PARTY.SEX = Sex,
                                      RACE.KNOWN = Race_Known,)
-
 
 
 #combining all citations data
@@ -129,11 +130,12 @@ AllMetadata_citations_FixRace[AllMetadata_Citations=="H"]<-("Hispanic")
 AllMetadata_citations_FixRace[AllMetadata_Citations=="ME"]<-("Middle Eastern")
 AllMetadata_citations_FixRace[AllMetadata_Citations=="N"]<-("Native American")
 
+
 #combining shootings into one database with all info together (multiple entries for single case numbers problem, also definitely a better way to do this)
 OIS_ALL<-merge(Shooting_officers,Shooting_Subjects)
 OIS_ALL<-merge(OIS_ALL,Shooting_Incidents)
 
-#make a table with availible data
+#make a table with available data
 AllMetadata_Shootings<-cbind.data.frame(OIS_ALL$Case..,OIS_ALL$Date,OIS_ALL$Time,OIS_ALL$Officer.Name,OIS_ALL$Rank,OIS_ALL$Officer.Race.Ethnicity,OIS_ALL$Officer.Gender,OIS_ALL$Prev.OIS,OIS_ALL$Subject.Race.Ethnicity,OIS_ALL$Subject.Gender, stringsAsFactors = FALSE)
 colnames(AllMetadata_Shootings)<-(c("Case","Date","Time","Officer Name","Officer Rank","Officer Race","Officer Gender","Officer Prev. OIS","Subject Race","Subject Gender"))
 
