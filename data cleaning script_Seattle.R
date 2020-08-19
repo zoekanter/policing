@@ -2,12 +2,16 @@
 library(dplyr)
 library(tidyr)
 
+#turn off scientific notation
+options(scipen=999)
+
 #set working directory
-setwd("~/Desktop/research/CSSC/policing")
+setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing")
+source("functions file.R")
 
 #I want to call in my datasets (citations, use of force).
-UOF<-read.csv(file='clean data/orlando/OPD_Response_To_Resistance.csv', stringsAsFactors = FALSE)
-Shootings<-read.csv(file='clean data/orlando/OPD_Officer-Involved_Shootings.csv', stringsAsFactors = FALSE)
+UOF<-read.csv(file='use_of_force_Seattle.csv', stringsAsFactors = FALSE)
+citations<-read.csv(file='citations_seattle.csv', stringsAsFactors = FALSE)
 
 #numericize the data
 #first split year/date into two separate variables
