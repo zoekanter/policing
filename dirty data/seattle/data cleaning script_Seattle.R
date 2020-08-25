@@ -34,6 +34,8 @@ AllMetadata_UOF_NA[AllMetadata_UOF=="2700 BLOCK UTAH AV S"]<-NA
 AllMetadata_UOF_NA[AllMetadata_UOF=="4200 BLOCK E MADISON ST"]<-NA
 AllMetadata_UOF_NA[AllMetadata_UOF=="500 BLOCK S MAIN ST"]<-NA
 AllMetadata_UOF_NA[AllMetadata_UOF=="5200 BLOCK UTAH AV S"]<-NA
+AllMetadata_UOF_NA[AllMetadata_UOF=="-9"]<-NA
+
 
 #Change race to be consisted with citations
 AllMetadata_UOF_FixRace<-AllMetadata_UOF_NA
@@ -49,7 +51,7 @@ AllMetadata_UOF_Standardized<-cbind.data.frame(AllMetadata_UOF_FixRace[,1:6],All
 colnames(AllMetadata_UOF_Standardized)[7]<-c("sector")
 
 #okay, now we'll export into a new dataset in a clean data folder
-write.csv(AllMetadata_UOF_Standardized,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data\\UseOfForce_Seattle.csv",row.names = FALSE)
+write.csv(AllMetadata_UOF_Standardized,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data/Seattle\\UseOfForce.csv",row.names = FALSE)
 
 
 #need to reorder date for citations to follow m/d/y format
@@ -85,7 +87,7 @@ AllMetadata_Citations_NA[citations=="-"]<-NA
 AllMetadata_Citations_NA$sector<-substr(AllMetadata_Citations_NA$sector,0,1)
 
 #Back to NA replace
-AllMetadata_Citations_NA[AllMetadata_Citations=="9"]<-NA
+AllMetadata_Citations_NA[AllMetadata_Citations_NA=="9"]<-NA
 
 
 #sometimes spelled Southwest, sometimes SouthWest
@@ -98,7 +100,7 @@ AllMetadata_Citations_NA$Reported.Time<-FixTime_Citations[,1]
 AllMetadata_Citations_NA$Precinct<-AllMetadata_Citations_CleanPrecinct$Precinct
 
 #write the file to a new location in clean data folder!
-write.csv(AllMetadata_Citations_NA,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data\\citations_Seattle.csv",row.names = FALSE)
+write.csv(AllMetadata_Citations_NA,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data/Seattle\\citations.csv",row.names = FALSE)
 
 
 #finally fix the officer involved shooting dataset. I need to standardize times and races
@@ -142,4 +144,7 @@ AllMetadata_shootings[AllMetadata_shootings=="Missing"]<-NA
 AllMetadata_shootings_clean<-cbind.data.frame(AllMetadata_shootings[,1:3],shooting_time,AllMetadata_shootings[,5:28])
 
 #save!
-write.csv(AllMetadata_shootings_clean,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data\\shootings_Seattle.csv",row.names = FALSE)
+write.csv(AllMetadata_shootings_clean,"C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/clean data/Seattle\\shootings.csv",row.names = FALSE)
+
+
+#test change##
