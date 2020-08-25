@@ -4,7 +4,7 @@ library(tidyr)
 library(gtools)
 
 #set working directory
-setwd("C:/Users/katie/Desktop/policing/Austin Dirty Datasets")
+setwd("C:/Users/katie/Desktop/policing/dirty data/Austin")
 
 #Call datasets Austin (citations, use of force)
 UOF15<-read.csv(file='R2R_2015.csv', stringsAsFactors = FALSE)
