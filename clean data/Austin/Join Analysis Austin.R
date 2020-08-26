@@ -6,8 +6,8 @@ library(tidyr)
 options(scipen = 999)
 
 #set working directory
-setwd("C:/Users/katie/Desktop/policing/Austin Dirty Datasets")
-source("functions file.R")
+setwd("C:/Users/katie/Desktop/policing/dirty data/Austin")
+source("Austin Functions File.R")
 
 #Calling two datasets
 UOF15<-read.csv(file='R2R_2015.csv', stringsAsFactors = FALSE)
