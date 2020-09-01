@@ -5,7 +5,7 @@ library(tidyr)
 library(stringr)
 
 #set working directory
-setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/dirty data")
+setwd("C://Users/Katherine Manbeck/Desktop/Everything clinical psych/research related/Police Accountability Folder/policing/dirty data/seattle")
 
 #I want to call in my datasets (citations, use of force).
 UOF<-read.csv(file='use_of_force_Seattle.csv', stringsAsFactors = FALSE)
